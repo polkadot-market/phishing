@@ -1,0 +1,40 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # run once per hour
+    - cron:  '17 * * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run the app
+      env:
+        praw_client_id: ${{secrets.PRAW_CLIENT_ID}}
+        praw_client_secret: ${{secrets.PRAW_CLIENT_SECRET}}
+        praw_user_agent: ${{secrets.PRAW_USER_AGENT}}
+        praw_username: ${{secrets.PRAW_USERNAME}}
+        praw_password: ${{secrets.PRAW_PASSWORD}}
+        subreddit: ${{secrets.SUBREDDIT}}
+      run: |
+        python app.py

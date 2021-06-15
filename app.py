@@ -5,11 +5,12 @@ from urllib.request import urlopen
 from string import Template
 
 url = "https://raw.githubusercontent.com/polkadot-js/phishing/master/all.json"
-subreddit_name = os.getenv("subreddit")
+subreddit_name = os.environ["subreddit"]
 
 block_template = Template("""# PHISHBLOCKBEGIN
 domain+body+title+media_description: [$blocklist]
 action: spam
+action_reason: "Domain on polkadot.js.org blocklist [{{match}}]"
 # PHISHBLOCKEND""")
 
 def update_automoderator(deny):
@@ -34,7 +35,7 @@ with urlopen(url) as response:
         print(f'{len(deny)} hosts on deny list.')
         try:
             import praw
-            print("Attempting to update automoderator config.")
+            print(f"Attempting to update {subreddit_name} config.")
             update_automoderator(deny)
         except ModuleNotFoundError:
             print("You need to install praw if you want to update automoderator config")
