@@ -5,7 +5,6 @@ from urllib.request import urlopen
 from string import Template
 
 url = "https://raw.githubusercontent.com/polkadot-js/phishing/master/all.json"
-subreddit_name = os.environ["subreddit"]
 
 block_template = Template("""# PHISHBLOCKBEGIN
 domain+body+title+media_description: [$blocklist]
